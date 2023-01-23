@@ -24,7 +24,7 @@ class OrderController extends Controller
         }  
         //inserting to db  
         $client_id=Client::where('email',$request->email)->first()->id;
-        $client = Order::create((['type_of_work'=>$request->type_of_work, 'academic_level'=>$request->academic_level, 'pages'=>$request->pages,'deadline'=>$request->deadline,'total_amount'=>$request->total, 'client_id'=>$client_id,'order_number'=>$order_number]));
+        $client = Order::create((['type_of_work'=>$request->type_of_work, 'academic_level'=>$request->academic_level, 'pages'=>$request->pages,'deadline'=>$request->deadline,'total_amount'=>$request->total,'description'=>$request->description, 'client_id'=>$client_id,'order_number'=>$order_number]));
     
         //sending mails
      
@@ -35,11 +35,11 @@ class OrderController extends Controller
         $mailDataAdmin = [
             'order_number' => $order_number,
         ];        
-/*
+
         Mail::to($request->email)->send(new OrderConfirmation($mailData));
         $emails = ['lehanneessays@gmail.com', 'ewrites215@gmail.com'];
         Mail::to( $emails)->send(new NewOrder($mailDataAdmin));
- */ 
+ 
         //Question file handling 
             $order_id = Order::where('order_number',$order_number)->first()->id;
             $file = $request->file('file');
@@ -81,6 +81,11 @@ class OrderController extends Controller
     public function download(Request $request)
     {
         $var = Media::where('order_id',$request->id)->first('name');
+       
+        
+        if(!$var){
+          return response()->json('null');  
+        }
         $name =$var->name;
         $dbpath = Media::where('order_id',$request->id)->get('path');
         $path = storage_path("app/orderFiles/{$name}/{$name}");
@@ -155,7 +160,10 @@ class OrderController extends Controller
     }
 
 
-
+    public function readView(Request $request)
+    {
+        return response()->json(Order::where("id",$request->id)->first());
+    }
 
 
     public function destroy(Request $request)

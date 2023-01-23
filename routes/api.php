@@ -47,6 +47,7 @@ Route::get('/message-read', [MessagesController::class, 'read'])->name('read');
 Route::get('/download/{id}', [OrderController::class, 'download'])->name('download');
 Route::get('/delete/{id}', [OrderController::class, 'destroy'])->name('destroy');
 Route::get('/message-readView/{id}', [MessagesController::class, 'readView'])->name('readView');
+Route::get('/description-readView/{id}', [OrderController::class, 'readView'])->name('readView');
 Route::get('/message-deleteView/{id}', [MessagesController::class, 'destroy'])->name('destroy');
 
 Route::get('/orders-read-completed/{query?}', [OrderController::class, 'completed'])->name('completed');
